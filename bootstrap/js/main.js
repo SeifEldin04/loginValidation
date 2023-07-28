@@ -37,10 +37,15 @@ else {
     dataContainer = [];
 }
 
-function clearForm() {
+function clearFormSignup() {
     nameInp.value = "";
     emailInp.value = "";
     passInp.value = "";
+}
+
+function clearFormLogin() {
+    currentEmail.value = "";
+    currentPassword.value = "";
 }
 
 nameInp.addEventListener('input', function () {
@@ -91,6 +96,8 @@ function checkDuplicationLocalStorageInSignup(email) {
     }
 }
 
+var welcomeLoginMessage = "";
+
 function signUpUser() {
     if (nameRegex.test(nameInp.value) && emailRegex.test(emailInp.value) && passwordRegex.test(passInp.value)) {
         if (checkDuplicationLocalStorageInSignup(emailInp.value)) {
@@ -101,14 +108,13 @@ function signUpUser() {
             };
             dataContainer.push(userData);
             localStorage.setItem("users", JSON.stringify(dataContainer));
-            clearForm();
+            clearFormSignup();
             myHome.classList.replace('d-none', 'd-block');
             myLogIn.classList.replace('d-block', 'd-none');
             mySignUp.classList.replace('d-block', 'd-none');
 
-            var welcomeSignupMessage = document.createElement('h1');
-            welcomeSignupMessage.textContent = "Welcome " + userData.name;
-            document.querySelector('.myDiv2').appendChild(welcomeSignupMessage);
+            welcomeLoginMessage = `<h1> WELCOME ${userData.name} </h1>`
+            document.querySelector('.myDiv2').innerHTML = welcomeLoginMessage;
         }
         else {
             window.alert("This email is already in use. Please use a different email.");
@@ -152,9 +158,9 @@ function logInUser() {
         window.alert("Wrong email or password");
     } else {
         var users = JSON.parse(localStorage.getItem("users"));
-        var welcomeLoginMessage = "";
         for (var i = 0; i < users.length; i++) {
             if (users[i].email === currentEmail.value && users[i].password === currentPassword.value) {
+                clearFormLogin();
                 myHome.classList.replace('d-none', 'd-block');
                 myLogIn.classList.replace('d-block', 'd-none');
                 mySignUp.classList.replace('d-block', 'd-none');
